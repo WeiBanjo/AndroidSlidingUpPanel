@@ -22,6 +22,8 @@ import android.view.accessibility.AccessibilityEvent;
 
 public class SlidingUpPanelLayout extends ViewGroup {
     private static final String TAG = "SlidingPaneLayout";
+    private static final float BOTTOM = 0.0f;
+    private static final float TOP = 1.0f;
 
     /**
      * Default peeking out panel height
@@ -412,7 +414,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
         int nextYStart = yStart;
 
         if (mFirstLayout) {
-            mSlideOffset = mCanSlide && mPreservedExpandedState ? 0.f : 1.f;
+            mSlideOffset = mCanSlide && mPreservedExpandedState ? BOTTOM : TOP;
         }
 
         for (int i = 0; i < childCount; i++) {
@@ -581,7 +583,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
     }
 
     private boolean expandPane(View pane, int initialVelocity) {
-        if (mFirstLayout || smoothSlideTo(0.f, initialVelocity)) {
+        if (mFirstLayout || smoothSlideTo(BOTTOM, initialVelocity)) {
             mPreservedExpandedState = true;
             return true;
         }
@@ -589,7 +591,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
     }
 
     private boolean collapsePane(View pane, int initialVelocity) {
-        if (mFirstLayout || smoothSlideTo(1.f, initialVelocity)) {
+        if (mFirstLayout || smoothSlideTo(TOP, initialVelocity)) {
             mPreservedExpandedState = false;
             return true;
         }
@@ -625,7 +627,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
      * @return true if sliding panels are completely expanded
      */
     public boolean isExpanded() {
-        return mCanSlide && mSlideOffset == 0;
+        return mCanSlide && mSlideOffset == BOTTOM;
     }
 
     /**
@@ -847,7 +849,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
         @Override
         public void onViewDragStateChanged(int state) {
             if (mDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
-                if (mSlideOffset == 0) {
+                if (mSlideOffset == BOTTOM) {
                     updateObscuredViewVisibility();
                     dispatchOnPanelExpanded(mSlideableView);
                     mPreservedExpandedState = true;
