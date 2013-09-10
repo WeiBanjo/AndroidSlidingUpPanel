@@ -25,6 +25,16 @@ public class SlidingUpPanelLayout extends ViewGroup {
     private static final float BOTTOM = 0.0f;
     private static final float TOP = 1.0f;
 
+    //add the following variables:
+    private boolean IS_FIXED_SIZE = true;  // true for predefined height, false for full screen
+    private static final int FIXED_FULL_SIZE = 500; // the total height of your view
+    private static final float FIXED_OFFSET_LIMIT = 0.2f;  //should be modified according to FIXED_FULL_SIZE
+
+    //add the following method:
+    public boolean isNotExpandedClicked(){
+        return mCanSlide && mSlideOffset > 0.97;
+    }
+
     /**
      * Default peeking out panel height
      */
@@ -716,7 +726,18 @@ public class SlidingUpPanelLayout extends ViewGroup {
         }
 
         final int topBound = getPaddingTop();
-        int y = (int) (topBound + slideOffset * mSlideRange);
+        int y = 0;
+        if(IS_FIXED_SIZE){
+            if (isNotExpandedClicked()) {
+                y = topBound + mSlideRange - FIXED_FULL_SIZE;
+            }
+            else{
+                y = topBound + mSlideRange;
+            }
+        }
+        else{
+            y = (int) (topBound + slideOffset * mSlideRange);
+        }
 
         if (mDragHelper.smoothSlideViewTo(mSlideableView, mSlideableView.getLeft(), y)) {
             setAllChildrenVisible();
@@ -875,9 +896,20 @@ public class SlidingUpPanelLayout extends ViewGroup {
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             int top = getPaddingTop();
-            if (yvel > 0 || (yvel == 0 && mSlideOffset > 0.5f)) {
-                top += mSlideRange;
+            if(IS_FIXED_SIZE){
+                if (yvel > 0 || (yvel == 0 && mSlideOffset > FIXED_OFFSET_LIMIT)) {
+                    top += mSlideRange;
+                }
+                else{
+                    top += mSlideRange - FIXED_FULL_SIZE;
+                }
             }
+            else{
+                if (yvel > 0 || (yvel == 0 && mSlideOffset > 0.5f)) {
+                    top += mSlideRange;
+                }
+            }
+
             mDragHelper.settleCapturedViewAt(releasedChild.getLeft(), top);
             invalidate();
         }
