@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 
+import com.sothree.slidinguppanel.library.R;
+
 public class SlidingUpPanelLayout extends ViewGroup {
     private static final String TAG = "SlidingPaneLayout";
     private static final float BOTTOM = 0.0f;
@@ -189,7 +191,20 @@ public class SlidingUpPanelLayout extends ViewGroup {
         super(context, attrs, defStyle);
 
         final float density = context.getResources().getDisplayMetrics().density;
-        mPanelHeight = (int) (DEFAULT_PANEL_HEIGHT * density + 0.5f);
+
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs,
+                R.styleable.SlidingUpPanelLayout,
+                0, 0);
+
+        try {
+            mPanelHeight = a.getDimensionPixelSize(R.styleable.SlidingUpPanelLayout_panelHeight, (int)(DEFAULT_PANEL_HEIGHT * density + 0.5f));
+            IS_FIXED_SIZE = a.getBoolean(R.styleable.SlidingUpPanelLayout_fixed, false);
+            FIXED_FULL_SIZE = a.getDimensionPixelSize(R.styleable.SlidingUpPanelLayout_fixedSize, FIXED_FULL_SIZE);
+        } finally {
+            a.recycle();
+        }
+
         mShadowHeight = (int) (DEFAULT_SHADOW_HEIGHT * density + 0.5f);
 
         setWillNotDraw(false);

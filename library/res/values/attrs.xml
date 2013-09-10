@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="SlidingUpPanelLayout">
+        <attr name="panelHeight" format="dimension" />
+        <attr name="fixed" format="boolean"/>
+        <attr name="fixedSize" format="dimension"/>
+    </declare-styleable>
+</resources>
