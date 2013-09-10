@@ -870,7 +870,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
         @Override
         public void onViewDragStateChanged(int state) {
             if (mDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
-                if (mSlideOffset == BOTTOM) {
+                if (mSlideOffset != TOP) {
                     updateObscuredViewVisibility();
                     dispatchOnPanelExpanded(mSlideableView);
                     mPreservedExpandedState = true;
